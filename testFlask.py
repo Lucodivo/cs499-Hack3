@@ -8,6 +8,7 @@ import ast
 import os.path
 
 app = Flask(__name__)
+app.run(host='0.0.0.0')
 
 clf = svm.SVC(gamma=0.001, C=100.)
 
@@ -32,17 +33,18 @@ def inputData_Post():
         target = joblib.load('target.pkl') + target
     joblib.dump(target, 'target.pkl')
 
-    clf.fit(sample, target)
     return "Model was fitted with data."
-
-@app.route('/predict')
-def predict():
-    return render_template("getPrediction.html")
 
 @app.route('/predict', methods=['POST'])
 def predict_Post():
-    predictText = request.form['predictDataText']
-    evaluatedText = ast.literal_eval(predictText)
+    sample = joblib.load('data.pkl')
+    target = joblib.load('target.pkl')
+    clf.fit(sample, target)
+    roadID = ast.literal_eval(request.form['predictIDText'])
+    dir = ast.literal_eval(request.form['predictDirText'])
+    day = ast.literal_eval(request.form['predictDayText'])
+    time = ast.literal_eval(request.form['predictTimeText'])
+    evaluatedText = [ roadID, dir, day, time ]
     return str(clf.predict(evaluatedText))
 
 if __name__ == '__main__':

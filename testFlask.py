@@ -48,4 +48,4 @@ def predict_Post():
     return str(clf.predict(evaluatedText))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

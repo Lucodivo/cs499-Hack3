@@ -13,25 +13,26 @@ clf = svm.SVC(gamma=0.001, C=100.)
 
 @app.route('/')
 def index():
-    return "Hello, World!"
-
-@app.route('/input')
-def inputData():
-    return render_template("inputData.html")
+    return render_template("index.html")
 
 @app.route('/input', methods=['POST'])
 def inputData_Post():
-    data = ast.literal_eval(request.form['dataText'])
+    roadID = ast.literal_eval(request.form['dataIDText'])
+    dir = ast.literal_eval(request.form['dataDirText'])
+    day = ast.literal_eval(request.form['dataDayText'])
+    time = ast.literal_eval(request.form['dataTimeText'])
+    sample = [ [ roadID , dir , day , time ] ]
     if os.path.isfile('data.pkl'):
-        data = joblib.load('data.pkl') + data
-    joblib.dump(data, 'data.pkl')
+        sample = joblib.load('data.pkl') + sample
+    joblib.dump(sample, 'data.pkl')
 
-    target = ast.literal_eval(request.form['targetText'])
+    tar = ast.literal_eval(request.form['dataTargetText'])
+    target = [ tar ]
     if os.path.isfile('target.pkl'):
         target = joblib.load('target.pkl') + target
     joblib.dump(target, 'target.pkl')
 
-    clf.fit(data, target)
+    clf.fit(sample, target)
     return "Model was fitted with data."
 
 @app.route('/predict')

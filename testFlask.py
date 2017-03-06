@@ -7,16 +7,16 @@ from sklearn.externals import joblib
 import ast
 import os.path
 
-app = Flask(__name__)
-app.run(host='0.0.0.0')
+application = Flask(__name__)
+application.run(host='0.0.0.0')
 
 clf = svm.SVC(gamma=0.001, C=100.)
 
-@app.route('/')
+@application.route('/')
 def index():
     return render_template("index.html")
 
-@app.route('/input', methods=['POST'])
+@application.route('/input', methods=['POST'])
 def inputData_Post():
     roadID = ast.literal_eval(request.form['dataIDText'])
     dir = ast.literal_eval(request.form['dataDirText'])
@@ -35,7 +35,7 @@ def inputData_Post():
 
     return "Model was fitted with data."
 
-@app.route('/predict', methods=['POST'])
+@application.route('/predict', methods=['POST'])
 def predict_Post():
     sample = joblib.load('data.pkl')
     target = joblib.load('target.pkl')
@@ -48,4 +48,4 @@ def predict_Post():
     return str(clf.predict(evaluatedText))
 
 if __name__ == '__main__':
-    app.run()
+    application.run()

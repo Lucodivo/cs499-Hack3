@@ -8,7 +8,6 @@ import ast
 import os.path
 
 application = Flask(__name__)
-application.run(host='0.0.0.0')
 
 clf = svm.SVC(gamma=0.001, C=100.)
 
@@ -48,4 +47,4 @@ def predict_Post():
     return str(clf.predict(evaluatedText))
 
 if __name__ == '__main__':
-    application.run()
+    application.run(host='0.0.0.0')
